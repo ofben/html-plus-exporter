@@ -1,0 +1,41 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100vh;
+}
+
+.capture,
+.preview {
+  padding: 1rem;
+  overflow: auto;
+}
+
+fieldset {
+  margin-block: 1rem;
+  border: 1px solid var(--divider, #d0d0d0);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+}
+
+textarea#preview {
+  width: 100%;
+  min-height: 40vh;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  white-space: pre;
+}
+
+#status {
+  display: block;
+  min-height: 1.5rem;
+  margin-top: 0.5rem;
+}
