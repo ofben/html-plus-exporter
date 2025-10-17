@@ -2,8 +2,40 @@ const statusEl = () => document.getElementById('status');
 const previewEl = () => document.getElementById('preview');
 let injected = false;
 
+chrome.devtools.network.onNavigated.addListener(() => {
+  injected = false;
+});
+
+async function helperAvailable() {
+  return new Promise((resolve, reject) => {
+    chrome.devtools.inspectedWindow.eval(
+      'Boolean(window.__clip2demoCapture)',
+      { useContentScriptContext: true },
+      (result, exceptionInfo) => {
+        if (exceptionInfo && exceptionInfo.isException) {
+          reject(new Error(exceptionInfo.value));
+        } else if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError.message));
+        } else {
+          resolve(Boolean(result));
+        }
+      }
+    );
+  });
+}
+
 async function ensureInjected() {
-  if (injected) return;
+  if (injected) {
+    try {
+      if (await helperAvailable()) {
+        return;
+      }
+      injected = false;
+    } catch (error) {
+      console.warn('Failed to verify inspected helper state:', error);
+      injected = false;
+    }
+  }
   const url = chrome.runtime.getURL('inspected.js');
   const response = await fetch(url);
   if (!response.ok) {
