@@ -1,0 +1,21 @@
+{
+  "name": "Clip2Demo",
+  "version": "0.1.0",
+  "manifest_version": 3,
+  "description": "Extract a DOM subtree with CSS/JS assets and export to a runnable demo.",
+  "devtools_page": "devtools.html",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "clipboardWrite",
+    "downloads"
+  ],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "worker.js"
+  },
+  "action": {
+    "default_title": "Clip2Demo"
+  }
+}
