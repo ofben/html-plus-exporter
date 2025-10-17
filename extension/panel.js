@@ -9,7 +9,7 @@ chrome.devtools.network.onNavigated.addListener(() => {
 async function helperAvailable() {
   return new Promise((resolve, reject) => {
     chrome.devtools.inspectedWindow.eval(
-      'Boolean(window.__clip2demoCapture)',
+      'typeof window.__clip2demoCapture === "function"',
       { useContentScriptContext: true },
       (result, exceptionInfo) => {
         if (exceptionInfo && exceptionInfo.isException) {
@@ -67,10 +67,19 @@ async function capture(options) {
       { useContentScriptContext: true },
       (result, exceptionInfo) => {
         if (exceptionInfo && exceptionInfo.isException) {
+          if (exceptionInfo.value?.includes('__clip2demoCapture')) {
+            injected = false;
+          }
           reject(new Error(exceptionInfo.value));
         } else if (chrome.runtime.lastError) {
+          if (chrome.runtime.lastError.message?.includes('__clip2demoCapture')) {
+            injected = false;
+          }
           reject(new Error(chrome.runtime.lastError.message));
         } else if (!result || result.error) {
+          if (result?.error?.includes('__clip2demoCapture')) {
+            injected = false;
+          }
           reject(new Error(result?.error || 'Unknown capture error'));
         } else {
           resolve(result);
